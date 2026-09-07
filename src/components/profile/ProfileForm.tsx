@@ -22,31 +22,47 @@ type Props = {
 export function ProfileForm({ profile }: Props) {
   const [isPending, startTransition] = useTransition()
   const [avatarPreview, setAvatarPreview] = useState<string>(profile.avatarUrl ?? "")
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
   const [genderPref, setGenderPref] = useState<GenderPreference | null>(profile.genderPreference)
-  const avatarDataRef = useRef<string>(profile.avatarUrl ?? "")
+  const avatarUrlRef = useRef<string>(profile.avatarUrl ?? "")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    e.target.value = ""
     if (!file) return
     if (file.size > 2 * 1024 * 1024) {
       toast.error("A imagem deve ter no máximo 2 MB")
       return
     }
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      const dataUrl = reader.result as string
-      setAvatarPreview(dataUrl)
-      avatarDataRef.current = dataUrl
+
+    const previewUrl = URL.createObjectURL(file)
+    setAvatarPreview(previewUrl)
+    setIsUploadingAvatar(true)
+
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      const res = await fetch("/api/upload/image", { method: "POST", body: formData })
+      const data = (await res.json()) as { url?: string; error?: string }
+      if (!res.ok || !data.url) {
+        throw new Error(data.error ?? "Erro no upload")
+      }
+      avatarUrlRef.current = data.url
+      setAvatarPreview(data.url)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao enviar a foto")
+      setAvatarPreview(avatarUrlRef.current)
+    } finally {
+      setIsUploadingAvatar(false)
+      URL.revokeObjectURL(previewUrl)
     }
-    reader.readAsDataURL(file)
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    // Inject avatar (data URL or original URL)
-    formData.set("avatarUrl", avatarDataRef.current)
+    formData.set("avatarUrl", avatarUrlRef.current)
     startTransition(async () => {
       const result = await updateProfileAction(formData)
       if (result.success) {
@@ -70,6 +86,7 @@ export function ProfileForm({ profile }: Props) {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
+            disabled={isUploadingAvatar}
             className="relative shrink-0 group"
             aria-label="Alterar foto de perfil"
           >
@@ -85,7 +102,12 @@ export function ProfileForm({ profile }: Props) {
                 {initials}
               </div>
             )}
-            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span
+              className={cn(
+                "absolute inset-0 flex items-center justify-center rounded-full bg-black/40 transition-opacity",
+                isUploadingAvatar ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+              )}
+            >
               <Camera size={20} className="text-white" />
             </span>
           </button>
@@ -159,13 +181,13 @@ export function ProfileForm({ profile }: Props) {
 
       <button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || isUploadingAvatar}
         className={cn(
           "w-full py-3 rounded-xl text-sm font-bold text-white transition-colors",
-          isPending ? "bg-gray-400 cursor-not-allowed" : "bg-airforce hover:bg-teal"
+          isPending || isUploadingAvatar ? "bg-gray-400 cursor-not-allowed" : "bg-airforce hover:bg-teal"
         )}
       >
-        {isPending ? "Salvando..." : "Salvar alterações"}
+        {isPending ? "Salvando..." : isUploadingAvatar ? "Enviando foto..." : "Salvar alterações"}
       </button>
     </form>
   )

@@ -127,6 +127,8 @@ export async function updateAvatarAction(url: string): Promise<ProfileActionResu
   if (!session?.user?.id) return { success: false, error: "Não autenticado" }
   await db.user.update({ where: { id: session.user.id }, data: { avatarUrl: url } })
   revalidatePath(`/profile/${session.user.id}`)
+  revalidatePath("/vendas")
+  revalidatePath("/perfil/perfil")
   return { success: true }
 }
 

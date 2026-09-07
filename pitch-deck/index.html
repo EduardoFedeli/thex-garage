@@ -17,7 +17,7 @@
 
 :root {
   --linen: #F8FAF8;
-  --paper: #EEF2EE;
+  --paper: #D8F3DC;
   --frosted: #D8F3DC;
   --celadon: #B7E4C7;
   --sage: #95D5B2;
@@ -40,10 +40,6 @@ html, body {
   transition: background .25s ease;
 }
 
-/* ===== Fixed-canvas stage: locks every proportion to 1920x1080 and
-   uniformly scales, so the deck looks identical regardless of the
-   machine/projector running it. Letterbox bars (only visible when the
-   screen isn't exactly 16:9) blend into the active slide's own color. ===== */
 #stage {
   position: fixed;
   top: 50%; left: 50%;
@@ -62,46 +58,27 @@ html, body {
 }
 .slide.active { display: block; }
 
-/* ---------- theme tokens ---------- */
 .slide.theme-light {
-  --bg: var(--paper);
-  --fg: var(--pine);
-  --fg-muted: var(--emerald);
-  --fg-soft: var(--teal-muted);
-  --accent: var(--teal);
-  --ring-track: rgba(27,67,50,.18);
-  --deco-ring: rgba(27,67,50,.05);
+  --bg: var(--paper); --fg: var(--pine); --fg-muted: var(--emerald); --fg-soft: var(--teal-muted);
+  --accent: var(--teal); --ring-track: rgba(27,67,50,.18); --deco-ring: rgba(27,67,50,.05);
 }
 .slide.theme-dark {
-  --bg: var(--pine);
-  --fg: var(--linen);
-  --fg-muted: var(--celadon);
-  --fg-soft: var(--sage);
-  --accent: var(--celadon);
-  --ring-track: rgba(248,250,248,.28);
-  --deco-ring: rgba(248,250,248,.07);
+  --bg: var(--pine); --fg: var(--linen); --fg-muted: var(--celadon); --fg-soft: var(--sage);
+  --accent: var(--celadon); --ring-track: rgba(248,250,248,.28); --deco-ring: rgba(248,250,248,.07);
 }
 .slide.theme-deep {
-  --bg: var(--forest);
-  --fg: var(--linen);
-  --fg-muted: var(--celadon);
-  --fg-soft: var(--sage);
-  --accent: var(--mint);
-  --ring-track: rgba(248,250,248,.24);
-  --deco-ring: rgba(248,250,248,.06);
+  --bg: var(--forest); --fg: var(--linen); --fg-muted: var(--celadon); --fg-soft: var(--sage);
+  --accent: var(--mint); --ring-track: rgba(248,250,248,.24); --deco-ring: rgba(248,250,248,.06);
 }
 
-/* ---------- decorative background ring (adds depth) ---------- */
 .deco-ring {
   position: absolute; width: 1100px; height: 1100px; border-radius: 50%;
   border: 2px solid var(--deco-ring);
   pointer-events: none; z-index: 0;
 }
 
-/* ---------- header logo (all slides except cover + closing) ---------- */
 .slide-logo { position: absolute; top: 44px; left: 96px; height: 28px; width: auto; z-index: 2; }
 
-/* ---------- shared chrome: fixed title zone + fixed footer zone ---------- */
 .title-zone {
   position: absolute;
   top: 88px; left: 128px; right: 128px;
@@ -112,28 +89,14 @@ html, body {
   line-height: 1.18;
   max-width: 1500px;
 }
-/* Fixed type scale used everywhere: 44px for every title, 22px for every
-   block of slide body copy (paragraphs, statements, list items). Small
-   labels — pills, badges, captions, the footer counter — stay their own
-   smaller tier on purpose; that is hierarchy, not inconsistency. */
 
-.body-zone {
-  position: absolute;
-  top: 280px; left: 128px; right: 128px; bottom: 160px;
-}
+.body-zone { position: absolute; top: 280px; left: 128px; right: 128px; bottom: 160px; }
 
 .footer-zone {
-  position: absolute;
-  bottom: 56px; right: 96px;
-  display: flex; align-items: center; gap: 16px;
-  z-index: 2;
+  position: absolute; bottom: 56px; right: 96px;
+  display: flex; align-items: center; gap: 16px; z-index: 2;
 }
-.footer-count {
-  font-size: 20px; font-weight: 500; color: var(--fg-muted); opacity: .75;
-  letter-spacing: .04em;
-}
-/* Ring is always the exact same geometry (r=42, stroke 5) on every slide —
-   only its color/fill state changes. Open = problem, closing = solution, closed = final. */
+.footer-count { font-size: 20px; font-weight: 500; color: var(--fg-muted); opacity: .75; letter-spacing: .04em; }
 .loop-mark circle { fill: none; stroke-width: 5; }
 .loop-mark.state-open circle { stroke: var(--ring-track); }
 .loop-mark.state-closing circle { stroke: var(--accent); }
@@ -141,57 +104,7 @@ html, body {
 
 .citation-line { font-size: 15px; color: var(--fg-soft); }
 
-/* ---------- SLIDE 1 — capa ---------- */
-#s1 .cover-wrap {
-  position: absolute; inset: 0; z-index: 1;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 32px; text-align: center;
-}
-.logo-mark { width: 560px; height: auto; display: block; }
-#s1 .subtitle { font-size: 34px; font-weight: 400; color: var(--fg-muted); max-width: 1100px; }
-#s1 .credits {
-  position: absolute; bottom: 72px; left: 0; right: 0; z-index: 1;
-  text-align: center; font-size: 18px; color: var(--fg-soft); font-weight: 500;
-  letter-spacing: .01em;
-}
-
-/* ---------- SLIDE 2 — a dor ---------- */
-#s2 .top-stat { position: absolute; top: 88px; left: 128px; right: 128px; z-index: 1; font-size: 44px; font-weight: 600; letter-spacing: -.01em; color: var(--fg); line-height: 1.2; max-width: 1500px; }
-#s2 .top-stat strong { color: var(--accent); }
-#s2 .top-stat .citation-line { display: block; margin-top: 14px; font-size: 15px; font-weight: 400; letter-spacing: normal; }
-
-#s2 .lifecycle { position: absolute; top: 380px; left: 128px; right: 700px; height: 420px; z-index: 1; display: flex; flex-direction: column; justify-content: center; gap: 26px; }
-#s2 .lc-row { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
-#s2 .lc-pill { font-size: 20px; color: var(--fg-muted); background: rgba(248,250,248,.07); border-radius: 12px; padding: 13px 18px; white-space: nowrap; }
-#s2 .lc-arrow { color: var(--fg-soft); font-size: 20px; flex-shrink: 0; }
-#s2 .lc-decision { position: relative; font-size: 22px; font-weight: 600; color: var(--fg); border: 2px solid var(--accent); border-radius: 14px; padding: 15px 22px; white-space: nowrap; }
-#s2 .lc-tag { position: absolute; top: -18px; right: -8px; font-size: 13px; font-weight: 700; color: var(--pine); background: var(--accent); padding: 5px 14px; border-radius: 999px; white-space: nowrap; }
-#s2 .lc-branches { display: flex; flex-direction: column; gap: 14px; margin-left: 48px; padding-left: 28px; border-left: 2px dashed var(--fg-soft); }
-#s2 .lc-branch { display: flex; align-items: center; gap: 12px; font-size: 19px; flex-wrap: wrap; }
-#s2 .lc-branch .lc-branch-label { min-width: 220px; }
-#s2 .lc-branch.without { color: var(--fg-soft); }
-#s2 .lc-branch.with { color: var(--fg); font-weight: 600; }
-#s2 .lc-branch .lc-pill.end-bad { background: transparent; border: 1px dashed var(--fg-soft); color: var(--fg-soft); }
-#s2 .lc-branch .lc-pill.end-good { background: var(--accent); color: var(--pine); font-weight: 700; }
-
-#s2 .evidence { position: absolute; top: 380px; right: 128px; width: 540px; height: 380px; z-index: 1; display: flex; flex-direction: column; gap: 14px; }
-#s2 .evidence-photo { width: 540px; height: 380px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(248,250,248,.15); flex-shrink: 0; }
-#s2 .evidence-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-#s2 .evidence .photo-caption { font-size: 15px; color: var(--fg-soft); opacity: .9; line-height: 1.5; }
-
-/* ---------- SLIDE 3 — o que é o Kloop + demo (unificado) ---------- */
-#s3 .solution-top { position: absolute; top: 210px; left: 128px; right: 128px; z-index: 1; text-align: center; }
-#s3 .solution-top p { font-size: 22px; font-weight: 400; color: var(--fg); line-height: 1.4; max-width: 1100px; margin: 0 auto; }
-#s3 .steps { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 22px; }
-#s3 .step {
-  font-size: 18px; font-weight: 600; color: var(--accent);
-  border: 2px solid var(--accent); border-radius: 999px; padding: 10px 24px;
-}
-#s3 .arrow { font-size: 20px; color: var(--fg-soft); }
-#s3 .corner-note { position: absolute; bottom: 56px; left: 128px; right: 420px; z-index: 1; font-size: 16px; color: var(--fg-muted); font-weight: 400; }
-#s3 .phones-row { position: absolute; top: 340px; left: 128px; right: 128px; bottom: 130px; z-index: 1; display: flex; align-items: flex-start; justify-content: center; gap: 56px; }
-#s3 .phone-col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-#s3 .anchor-tag { font-size: 15px; font-weight: 500; color: var(--fg-muted); background: rgba(64,145,108,.1); border-radius: 999px; padding: 8px 18px; }
+/* ---------- shared: video phone slots (fallback while videos aren't recorded yet) ---------- */
 .phone-frame {
   width: 300px; height: 616px;
   border: 10px solid var(--pine); border-radius: 46px;
@@ -216,85 +129,147 @@ html, body {
 .phone-frame .placeholder.show { display: flex; }
 .phone-frame .placeholder .ph-title { font-size: 20px; font-weight: 600; }
 .phone-frame .placeholder .ph-sub { font-size: 14px; font-weight: 400; color: var(--sage); }
-
-/* ---------- SLIDE 4 — diferencial: confiança ---------- */
-#s4 .split { position: absolute; top: 260px; left: 128px; right: 128px; bottom: 150px; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
-#s4 .col { border-radius: 24px; padding: 44px 44px; display: flex; flex-direction: column; }
-#s4 .col.c2c { background: transparent; border: 2px solid var(--fg-soft); }
-#s4 .col.c2c, #s4 .col.c2c h3 { color: var(--fg); }
-#s4 .col.c2c .frame-line { color: var(--fg-muted); }
-#s4 .col.c2c li { color: var(--fg); }
-#s4 .col.c2c li::before { color: var(--accent); }
-#s4 .col.comm { background: var(--paper); border: 2px solid var(--teal); }
-#s4 .col.comm, #s4 .col.comm h3 { color: var(--pine); }
-#s4 .card-icon { margin-top: auto; padding-top: 28px; width: 84px; height: 84px; }
-#s4 .card-icon svg { width: 100%; height: 100%; display: block; }
-#s4 .col.c2c .card-icon { color: var(--fg-soft); }
-#s4 .col.comm .card-icon { color: var(--teal); }
-#s4 .col.comm .frame-line { color: var(--emerald); }
-#s4 .col.comm li { color: var(--pine); }
-#s4 .col.comm li::before { color: var(--teal); }
-#s4 .col h3 { font-size: 24px; font-weight: 600; margin-bottom: 10px; }
-#s4 .col .frame-line { font-size: 17px; font-style: italic; margin-bottom: 22px; }
-#s4 .col ul { list-style: none; display: flex; flex-direction: column; gap: 20px; }
-#s4 .col li { font-size: 22px; line-height: 1.4; position: relative; padding-left: 22px; }
-#s4 .col li::before { content: "—"; position: absolute; left: 0; }
-
-/* ---------- SLIDE 5 — comunidades ---------- */
-#s5 .thesis { position: absolute; top: 250px; left: 128px; right: 128px; z-index: 1; font-size: 22px; color: var(--fg); font-weight: 400; max-width: 1550px; line-height: 1.5; }
-#s5 .plans { position: absolute; top: 420px; left: 128px; right: 128px; bottom: 130px; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
-#s5 .plan { border-radius: 24px; padding: 36px 40px; border: 2px solid var(--frosted); }
-#s5 .plan.pro { border-color: var(--accent); background: rgba(64,145,108,.06); }
-#s5 .plan .plan-name { font-size: 24px; font-weight: 600; color: var(--fg); }
-#s5 .plan .plan-tag { font-size: 15px; font-weight: 500; color: var(--accent); margin-bottom: 18px; letter-spacing: .02em; }
-#s5 .plan ul { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
-#s5 .plan li { font-size: 22px; color: var(--fg); line-height: 1.3; position: relative; padding-left: 20px; }
-#s5 .plan li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
-#s5 .plan.plan-split { display: flex; gap: 28px; align-items: stretch; }
-#s5 .plan-body { flex: 1 1 auto; min-width: 0; }
-#s5 .plan-visual { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 .phone-frame.mini { width: 224px; height: 460px; border-width: 7px; border-radius: 30px; }
 .phone-frame.mini .notch { width: 56px; height: 10px; top: 9px; }
-#s5 .plan-photos { display: flex; gap: 14px; margin-top: 20px; height: 300px; }
-#s5 .plan-photo { flex: 1; height: 100%; border-radius: 16px; overflow: hidden; border: 1px solid rgba(27,67,50,.12); background: var(--linen); }
-#s5 .plan-photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
-#s5 .honesty-note { position: absolute; bottom: 56px; left: 128px; right: 420px; z-index: 1; font-size: 16px; color: var(--fg-muted); border-top: 1px solid var(--frosted); padding-top: 14px; }
 
-/* ---------- SLIDE 6 — custo (3 cartões: Enjoei / OLX / Kloop) ---------- */
-#s6 .fee-grid { position: absolute; top: 240px; left: 128px; right: 128px; bottom: 175px; z-index: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
-#s6 .fee-card { border-radius: 24px; padding: 36px 34px; border: 2px solid var(--fg-soft); display: flex; flex-direction: column; }
-#s6 .fee-logo-row { height: 40px; display: flex; align-items: center; }
-#s6 .fee-logo { height: 36px; width: auto; max-width: 170px; object-fit: contain; }
-#s6 .fee-name { font-size: 20px; font-weight: 600; color: var(--fg); margin-top: 10px; }
-#s6 .fee-model { font-size: 15px; color: var(--fg-soft); line-height: 1.4; margin-top: 10px; min-height: 58px; }
-#s6 .fee-discount { font-size: 16px; color: var(--fg-muted); margin-top: 10px; }
-#s6 .fee-net { font-size: 50px; font-weight: 700; letter-spacing: -.02em; color: var(--fg); margin-top: 4px; }
-#s6 .fee-note { font-size: 14px; color: var(--fg-soft); line-height: 1.45; margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(149,213,178,.25); }
-#s6 .fee-citation { position: absolute; bottom: 128px; left: 128px; z-index: 1; }
-#s6 .closing-line { position: absolute; bottom: 56px; left: 128px; right: 128px; z-index: 1; font-size: 17px; color: var(--fg-muted); font-style: italic; max-width: 1500px; }
+/* ---------- SLIDE 1 — espera ---------- */
+#s1 .bg-icon { position: absolute; color: rgba(248,250,248,.07); pointer-events: none; }
+#s1 .bg-icon svg { width: 100%; height: 100%; }
+#s1 .credits {
+  position: absolute; bottom: 96px; left: 0; right: 0; z-index: 1;
+  text-align: center; font-size: 20px; color: var(--fg-soft); font-weight: 500; letter-spacing: .01em;
+}
 
-/* ---------- SLIDE 7 — viabilidade ---------- */
-#s7 .top-half { position: absolute; top: 250px; left: 128px; right: 128px; z-index: 1; height: 330px; }
-#s7 .equation { display: flex; align-items: baseline; gap: 26px; }
-#s7 .eq-term { text-align: left; }
-#s7 .eq-term .num { font-size: 74px; font-weight: 700; letter-spacing: -.02em; color: var(--fg); }
-#s7 .eq-term.result .num { color: var(--accent); }
-#s7 .eq-term .lbl { font-size: 15px; color: var(--fg-muted); font-weight: 500; margin-top: 2px; }
-#s7 .eq-op { font-size: 52px; font-weight: 300; color: var(--fg-soft); }
-#s7 .eq-note { font-size: 14px; color: var(--fg-soft); margin-top: 14px; max-width: 700px; }
-#s7 .breakeven-row { display: flex; gap: 24px; margin-top: 28px; }
-#s7 .chip { background: var(--frosted); border-radius: 14px; padding: 14px 26px; font-size: 19px; font-weight: 600; color: var(--pine); }
-#s7 .chip span { font-weight: 400; color: var(--emerald); font-size: 15px; display: block; margin-top: 2px; }
-#s7 .micro-footer { margin-top: 26px; font-size: 15px; color: var(--fg-soft); }
-#s7 .bottom-half { position: absolute; top: 620px; left: 128px; right: 128px; bottom: 150px; z-index: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
-#s7 .status-col h4 { font-size: 17px; font-weight: 600; color: var(--fg); margin-bottom: 14px; letter-spacing: .01em; }
-#s7 .status-col p { font-size: 22px; color: var(--fg-muted); line-height: 1.5; }
-#s7 .status-col.done h4 { color: var(--accent); }
+/* ---------- SLIDE 2 — a dor ---------- */
+#s2 .dor-headline { position: absolute; top: 88px; left: 128px; right: 128px; z-index: 1; font-size: 38px; font-weight: 600; letter-spacing: -.01em; color: var(--fg); line-height: 1.25; max-width: 900px; }
+#s2 .dor-headline strong { color: var(--accent); }
+#s2 .dor-subline { position: absolute; top: 195px; left: 128px; z-index: 1; font-size: 60px; font-weight: 700; letter-spacing: -.01em; color: var(--accent); line-height: 1.1; }
+#s2 .dor-world { position: absolute; top: 280px; left: 128px; z-index: 1; font-size: 15px; color: var(--fg-soft); }
+#s2 .citation-line { position: absolute; top: 302px; left: 128px; z-index: 1; }
 
-/* ---------- SLIDE 8 — obrigado ---------- */
-#s8 .center-wrap { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
-#s8 .thanks-line { font-size: 104px; font-weight: 700; letter-spacing: -.02em; color: var(--fg); }
-#s8 .thanks-credits { font-size: 20px; color: var(--fg-soft); font-weight: 500; }
+#s2 .evidence { position: absolute; top: 360px; right: 96px; width: 640px; height: 560px; z-index: 1; display: flex; flex-direction: column; gap: 14px; }
+#s2 .evidence-photo { width: 640px; height: 560px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(27,67,50,.15); flex-shrink: 0; }
+#s2 .evidence-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#s2 .evidence .photo-caption { font-size: 15px; color: var(--fg-soft); opacity: .9; line-height: 1.5; }
+
+#s2 .staircase { position: absolute; top: 360px; left: 128px; width: 640px; bottom: 60px; z-index: 1; }
+#s2 .stair-step {
+  position: absolute; display: flex; align-items: center; gap: 16px;
+  width: 300px; border-radius: 18px; padding: 16px 22px;
+  background: var(--linen); border: 1px solid rgba(27,67,50,.1);
+  font-size: 20px; font-weight: 600; color: var(--fg);
+  box-shadow: 0 6px 18px rgba(27,67,50,.08);
+}
+#s2 .stair-step .step-icon {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(27,67,50,.08); color: var(--fg-muted);
+}
+#s2 .stair-step .step-icon svg { width: 22px; height: 22px; }
+#s2 .stair-step.strong { background: var(--sage); color: var(--linen); }
+#s2 .stair-step.strong .step-icon { background: rgba(248,250,248,.22); color: var(--linen); }
+#s2 .stair-step.final { background: var(--accent); color: var(--linen); font-weight: 700; }
+#s2 .stair-step.final .step-icon { background: rgba(248,250,248,.22); color: var(--linen); }
+#s2 .stair-connector { position: absolute; color: var(--fg-soft); font-size: 22px; }
+
+/* ---------- SLIDE 3 — solução, o reveal ---------- */
+#s3 .reveal-wrap { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; text-align: center; }
+#s3 .reveal-logo { width: 320px; height: auto; }
+#s3 .reveal-tagline { font-size: 24px; color: var(--fg-muted); font-weight: 400; max-width: 900px; }
+#s3 .loop-diagram { position: relative; width: 560px; height: 500px; margin-top: 12px; }
+#s3 .loop-ring { position: absolute; inset: 0; }
+#s3 .loop-node {
+  position: absolute; transform: translate(-50%, -50%); z-index: 2;
+  font-size: 17px; font-weight: 500; color: var(--fg); background: var(--forest);
+  border-radius: 999px; padding: 12px 22px; white-space: nowrap;
+}
+#s3 .loop-node.hero {
+  font-size: 19px; font-weight: 700; color: var(--pine); background: var(--accent); padding: 14px 26px;
+}
+#s3 .loop-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 76px; height: 76px; border-radius: 22px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,.25); }
+#s3 .loop-center img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#s3 .corner-note { position: absolute; bottom: 56px; left: 128px; right: 420px; z-index: 1; font-size: 16px; color: var(--fg-muted); font-weight: 400; }
+
+/* ---------- SLIDE 4 & 5 — produto (vídeos) ---------- */
+.product-videos { position: absolute; top: 260px; left: 128px; right: 128px; bottom: 130px; z-index: 1; display: flex; align-items: flex-start; justify-content: center; gap: 96px; }
+.product-col { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.product-col .anchor-tag { font-size: 16px; font-weight: 500; color: var(--fg-muted); background: rgba(64,145,108,.1); border-radius: 999px; padding: 9px 20px; text-align: center; max-width: 320px; }
+
+/* ---------- SLIDE 6 (confiança) ---------- */
+#s6 .split { position: absolute; top: 260px; left: 128px; right: 128px; bottom: 150px; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+#s6 .col { border-radius: 24px; padding: 44px 44px; display: flex; flex-direction: column; }
+#s6 .col.c2c { background: transparent; border: 2px solid var(--fg-soft); }
+#s6 .col.c2c, #s6 .col.c2c h3 { color: var(--fg); }
+#s6 .col.c2c .frame-line { color: var(--fg-muted); }
+#s6 .col.c2c li { color: var(--fg); }
+#s6 .col.c2c li::before { color: var(--accent); }
+#s6 .col.comm { background: var(--paper); border: 2px solid var(--teal); }
+#s6 .col.comm, #s6 .col.comm h3 { color: var(--pine); }
+#s6 .col.comm .frame-line { color: var(--emerald); }
+#s6 .col.comm li { color: var(--pine); }
+#s6 .col.comm li::before { color: var(--teal); }
+#s6 .col h3 { font-size: 24px; font-weight: 600; margin-bottom: 10px; }
+#s6 .col .frame-line { font-size: 17px; font-style: italic; margin-bottom: 22px; }
+#s6 .col ul { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+#s6 .col li { font-size: 22px; line-height: 1.4; position: relative; padding-left: 22px; }
+#s6 .col li::before { content: "—"; position: absolute; left: 0; }
+#s6 .card-icon { margin-top: auto; padding-top: 28px; width: 84px; height: 84px; }
+#s6 .card-icon svg { width: 100%; height: 100%; display: block; }
+#s6 .col.c2c .card-icon { color: var(--fg-soft); }
+#s6 .col.comm .card-icon { color: var(--teal); }
+
+/* ---------- SLIDE 7 (comunidades) ---------- */
+#s7 .thesis { position: absolute; top: 250px; left: 128px; right: 128px; z-index: 1; font-size: 22px; color: var(--fg); font-weight: 400; max-width: 1550px; line-height: 1.5; }
+#s7 .plans { position: absolute; top: 420px; left: 128px; right: 128px; bottom: 130px; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+#s7 .plan { border-radius: 24px; padding: 36px 40px; border: 2px solid var(--frosted); }
+#s7 .plan.pro { border-color: var(--accent); background: rgba(64,145,108,.06); }
+#s7 .plan .plan-name { font-size: 24px; font-weight: 600; color: var(--fg); }
+#s7 .plan .plan-tag { font-size: 15px; font-weight: 500; color: var(--accent); margin-bottom: 18px; letter-spacing: .02em; }
+#s7 .plan ul { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+#s7 .plan li { font-size: 22px; color: var(--fg); line-height: 1.3; position: relative; padding-left: 20px; }
+#s7 .plan li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+#s7 .honesty-note { position: absolute; bottom: 56px; left: 128px; right: 420px; z-index: 1; font-size: 16px; color: var(--fg-muted); border-top: 1px solid var(--frosted); padding-top: 14px; }
+#s7 .plan.plan-split { display: flex; gap: 28px; align-items: stretch; }
+#s7 .plan-body { flex: 1 1 auto; min-width: 0; }
+#s7 .plan-visual { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+#s7 .plan-photos { display: flex; gap: 14px; margin-top: 20px; height: 300px; }
+#s7 .plan-photo { flex: 1; height: 100%; border-radius: 16px; overflow: hidden; border: 1px solid rgba(27,67,50,.12); background: var(--linen); }
+#s7 .plan-photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* ---------- SLIDE 8 (custo) ---------- */
+#s8 .fee-grid { position: absolute; top: 240px; left: 128px; right: 128px; bottom: 175px; z-index: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
+#s8 .fee-card { border-radius: 24px; padding: 36px 34px; border: 2px solid var(--fg-soft); display: flex; flex-direction: column; }
+#s8 .fee-logo-row { height: 40px; display: flex; align-items: center; }
+#s8 .fee-logo { height: 36px; width: auto; max-width: 170px; object-fit: contain; }
+#s8 .fee-name { font-size: 20px; font-weight: 600; color: var(--fg); margin-top: 10px; }
+#s8 .fee-model { font-size: 15px; color: var(--fg-soft); line-height: 1.4; margin-top: 10px; min-height: 58px; }
+#s8 .fee-discount { font-size: 16px; color: var(--fg-muted); margin-top: 10px; }
+#s8 .fee-net { font-size: 50px; font-weight: 700; letter-spacing: -.02em; color: var(--fg); margin-top: 4px; }
+#s8 .fee-note { font-size: 14px; color: var(--fg-soft); line-height: 1.45; margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(149,213,178,.25); }
+#s8 .fee-citation { position: absolute; bottom: 128px; left: 128px; z-index: 1; }
+#s8 .closing-line { position: absolute; bottom: 56px; left: 128px; right: 128px; z-index: 1; font-size: 17px; color: var(--fg-muted); font-style: italic; max-width: 1500px; }
+
+/* ---------- SLIDE 9 (viabilidade) ---------- */
+#s9 .top-half { position: absolute; top: 250px; left: 128px; right: 128px; z-index: 1; height: 330px; }
+#s9 .equation { display: flex; align-items: baseline; gap: 26px; }
+#s9 .eq-term { text-align: left; }
+#s9 .eq-term .num { font-size: 74px; font-weight: 700; letter-spacing: -.02em; color: var(--fg); }
+#s9 .eq-term.result .num { color: var(--accent); }
+#s9 .eq-term .lbl { font-size: 15px; color: var(--fg-muted); font-weight: 500; margin-top: 2px; }
+#s9 .eq-op { font-size: 52px; font-weight: 300; color: var(--fg-soft); }
+#s9 .eq-note { font-size: 14px; color: var(--fg-soft); margin-top: 14px; max-width: 700px; }
+#s9 .breakeven-row { display: flex; gap: 24px; margin-top: 28px; }
+#s9 .chip { background: var(--frosted); border-radius: 14px; padding: 14px 26px; font-size: 19px; font-weight: 600; color: var(--pine); }
+#s9 .chip span { font-weight: 400; color: var(--emerald); font-size: 15px; display: block; margin-top: 2px; }
+#s9 .micro-footer { margin-top: 26px; font-size: 15px; color: var(--fg-soft); }
+#s9 .bottom-half { position: absolute; top: 620px; left: 128px; right: 128px; bottom: 150px; z-index: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+#s9 .status-col h4 { font-size: 17px; font-weight: 600; color: var(--fg); margin-bottom: 14px; letter-spacing: .01em; }
+#s9 .status-col p { font-size: 22px; color: var(--fg-muted); line-height: 1.5; }
+#s9 .status-col.done h4 { color: var(--accent); }
+
+/* ---------- SLIDE 10 — obrigado ---------- */
+#s10 .thanks-line { font-size: 104px; font-weight: 700; letter-spacing: -.02em; color: var(--fg); }
+#s10 .thanks-credits { font-size: 20px; color: var(--fg-soft); font-weight: 500; }
 
 </style>
 </head>
@@ -302,121 +277,208 @@ html, body {
 
 <div id="stage">
 
-  <!-- ============ SLIDE 1 — CAPA ============ -->
+  <!-- ============ SLIDE 1 — ESPERA ============ -->
   <section class="slide theme-deep active" id="s1">
-    <div class="deco-ring" style="top:-480px; right:-420px;"></div>
-    <div class="cover-wrap">
-      <img class="logo-mark" src="assets/img/logo-extensa.png" alt="Kloop">
-      <div class="subtitle">Marketplace de desapegos, economia circular e comércio de vizinhança</div>
+    <div class="bg-icon" style="top:120px; left:180px; width:140px; height:140px;">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 4 L40 10 V22 C40 33 33 40 24 44 C15 40 8 33 8 22 V10 Z"/>
+        <path d="M17 24 L22 29 L32 18"/>
+      </svg>
+    </div>
+    <div class="bg-icon" style="top:680px; left:260px; width:110px; height:110px;">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="10" y="6" width="28" height="38" rx="2"/>
+        <line x1="17" y1="14" x2="21" y2="14"/><line x1="27" y1="14" x2="31" y2="14"/>
+        <line x1="17" y1="22" x2="21" y2="22"/><line x1="27" y1="22" x2="31" y2="22"/>
+        <line x1="17" y1="30" x2="21" y2="30"/><line x1="27" y1="30" x2="31" y2="30"/>
+        <rect x="20" y="36" width="8" height="8"/>
+      </svg>
+    </div>
+    <div class="bg-icon" style="top:150px; right:220px; width:120px; height:120px;">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 24 L24 6 H40 V22 L22 40 Z"/><circle cx="31" cy="15" r="3"/>
+      </svg>
+    </div>
+    <div class="bg-icon" style="bottom:200px; right:280px; width:130px; height:130px;">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 24a16 16 0 0 1 16-16c5 0 9.5 2.3 12.4 6"/>
+        <path d="M32 6 L36.4 14 L27 15"/>
+        <path d="M40 24a16 16 0 0 1-16 16c-5 0-9.5-2.3-12.4-6"/>
+        <path d="M16 42 L11.6 34 L21 33"/>
+      </svg>
+    </div>
+    <div class="bg-icon" style="bottom:120px; left:520px; width:90px; height:90px;">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="24" cy="24" r="18"/>
+      </svg>
     </div>
     <div class="credits">Otavio Vitoriano · Gabriel Torres · Eduardo Fedeli · Caique Chagas · Rodrigo Resende</div>
     <div class="footer-zone">
-      <span class="footer-count">1 / 8</span>
+      <span class="footer-count">1 / 10</span>
       <svg class="loop-mark state-open" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
     </div>
   </section>
-  <!-- Passagem: "Antes de mostrar o que a gente construiu, um número." -->
+  <!-- Passagem: (slide de espera, some antes de começar a falar; primeira fala real é no slide 2) -->
 
   <!-- ============ SLIDE 2 — A DOR ============ -->
-  <section class="slide theme-dark" id="s2">
+  <section class="slide theme-light" id="s2">
     <div class="deco-ring" style="bottom:-500px; left:-460px;"></div>
-    <img class="slide-logo" src="assets/img/logo-extensa.png" alt="Kloop">
-    <div class="top-stat">
-      <strong>4 milhões</strong> de toneladas de resíduo têxtil descartadas no Brasil por ano. <strong>~80%</strong> vai para aterro ou lixão (no mundo, ~92 milhões/ano).
-      <span class="citation-line">Fonte: Abrema, 20 de janeiro de 2025</span>
-    </div>
-    <div class="lifecycle">
-      <div class="lc-row">
-        <div class="lc-pill">Peça produzida</div>
-        <div class="lc-arrow">→</div>
-        <div class="lc-pill">Usada por um tempo</div>
-        <div class="lc-arrow">→</div>
-        <div class="lc-pill">Dona não quer mais</div>
-        <div class="lc-arrow">→</div>
-        <div class="lc-decision">Vender ou jogar fora?<span class="lc-tag">Kloop atua aqui</span></div>
-      </div>
-      <div class="lc-branches">
-        <div class="lc-branch without">
-          <span class="lc-branch-label">Sem plataforma acessível</span>
-          <span class="lc-arrow">→</span>
-          <span class="lc-pill end-bad">Joga fora</span>
-          <span class="lc-arrow">→</span>
-          <span class="lc-pill end-bad">Aterro</span>
-        </div>
-        <div class="lc-branch with">
-          <span class="lc-branch-label">Com o Kloop</span>
-          <span class="lc-arrow">→</span>
-          <span class="lc-pill end-good">Vende</span>
-          <span class="lc-arrow">→</span>
-          <span class="lc-pill end-good">Circula mais um ciclo ↻</span>
-        </div>
-      </div>
-    </div>
+    <div class="dor-headline">4 milhões de toneladas de resíduos têxteis são descartadas no Brasil todos os anos.</div>
+    <div class="dor-subline">~80% vai parar em aterros ou lixões.</div>
+    <div class="dor-world">No mundo, o número passa de 92 milhões de toneladas por ano.</div>
+    <span class="citation-line">Fonte: Abrema, 20 de janeiro de 2025</span>
     <div class="evidence">
       <div class="evidence-photo"><img src="assets/img/slide2img.jpeg" alt="Pilha de roupas descartadas em praça pública"></div>
       <div class="photo-caption">Instalação de roupas descartadas · matéria Abrema, 20/01/2025</div>
     </div>
+    <div class="staircase">
+      <div class="stair-step" style="left:0px; top:0px;">
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L21 7.5 V16.5 L12 21 L3 16.5 V7.5 Z"/><path d="M3 7.5 L12 12 L21 7.5"/><path d="M12 12 V21"/></svg></div>
+        Peça produzida
+      </div>
+      <div class="stair-connector" style="left:44px; top:76px;">↘</div>
+      <div class="stair-step" style="left:85px; top:95px;">
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15.5 14"/></svg></div>
+        Usada por um tempo
+      </div>
+      <div class="stair-connector" style="left:129px; top:171px;">↘</div>
+      <div class="stair-step" style="left:170px; top:190px;">
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div>
+        Dono(a) não quer mais
+      </div>
+      <div class="stair-connector" style="left:214px; top:266px;">↘</div>
+      <div class="stair-step strong" style="left:255px; top:285px;">
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 H6 a2 2 0 0 0 -2 2 v12 a2 2 0 0 0 2 2 h3"/><path d="M13 8 L18 12 L13 16"/><path d="M18 12 H9"/></svg></div>
+        Joga fora
+      </div>
+      <div class="stair-connector" style="left:299px; top:361px;">↘</div>
+      <div class="stair-step final" style="left:340px; top:380px;">
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7 H20"/><path d="M9 7 V4 H15 V7"/><path d="M6 7 L7 20 a2 2 0 0 0 2 2 H15 a2 2 0 0 0 2 -2 L18 7"/><path d="M10 11 V17"/><path d="M14 11 V17"/></svg></div>
+        Aterro
+      </div>
+    </div>
     <div class="footer-zone">
-      <span class="footer-count">2 / 8</span>
+      <span class="footer-count">2 / 10</span>
       <svg class="loop-mark state-open" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
     </div>
   </section>
-  <!-- Passagem: "A gente não entrou pra competir de frente. Enjoei e OLX são feitos pra vender pra desconhecidos e cobram pesado na peça barata. A gente entrou por dois lugares que eles não ocupam: confiança e custo." -->
+  <!-- Passagem: "É esse o caminho hoje, sem alternativa. E não é que ninguém tenha tentado — a gente entrou nesse ciclo por um lugar bem específico." -->
 
-  <!-- ============ SLIDE 3 — O QUE É O KLOOP + DEMO (unificado) ============ -->
-  <section class="slide theme-light" id="s3">
-    <div class="deco-ring" style="top:-500px; left:-460px;"></div>
-    <img class="slide-logo" src="assets/img/logo-teal.png" alt="Kloop">
-    <div class="title-zone">Um marketplace consolidador de desapegos</div>
-    <div class="solution-top">
-      <p>Descoberta, negociação, reputação, pagamento e entrega no mesmo lugar.</p>
-      <div class="steps">
-        <div class="step">Anuncia</div>
-        <div class="arrow">→</div>
-        <div class="step">Negocia</div>
-        <div class="arrow">→</div>
-        <div class="step">Recebe</div>
-      </div>
-    </div>
-    <div class="phones-row">
-      <div class="phone-col">
-        <div class="phone-frame small">
-          <div class="notch"></div>
-          <img src="assets/img/oferta-print.jpeg" alt="Tela de oferta e contra-proposta">
-        </div>
-        <div class="anchor-tag">Oferta e contra-proposta</div>
-      </div>
-      <div class="phone-col">
-        <div class="phone-frame small">
-          <div class="notch"></div>
-          <video id="demo-video" muted playsinline loop autoplay poster="">
-            <source src="assets/video/demo.mp4" type="video/mp4">
-          </video>
-          <div class="placeholder" id="demo-placeholder">
-            <div class="ph-title">Vídeo da demo</div>
-            <div class="ph-sub">Coloque a gravação em<br><code>assets/video/demo.mp4</code></div>
-          </div>
-        </div>
-        <div class="anchor-tag">Demonstração</div>
-      </div>
-      <div class="phone-col">
-        <div class="phone-frame small">
-          <div class="notch"></div>
-          <img src="assets/img/vender-print.png.jpeg" alt="Tela do painel do vendedor, cashback e saldo">
-        </div>
-        <div class="anchor-tag">Cashback e vendas</div>
+  <!-- ============ SLIDE 3 — SOLUÇÃO: O REVEAL ============ -->
+  <section class="slide theme-dark" id="s3">
+    <div class="deco-ring" style="top:-480px; right:-420px;"></div>
+    <div class="reveal-wrap">
+      <img class="reveal-logo" src="assets/img/logo-extensa.png" alt="Kloop">
+      <div class="reveal-tagline">Descoberta, negociação, reputação, pagamento e entrega no mesmo lugar.</div>
+      <div class="loop-diagram">
+        <svg class="loop-ring" viewBox="0 0 560 500">
+          <defs>
+            <marker id="loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="15" markerHeight="15" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+            </marker>
+          </defs>
+          <path d="M 355.2 43.3 A 220 220 0 0 1 486.7 174.8" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" marker-end="url(#loop-arrow)"/>
+          <path d="M 486.7 325.2 A 220 220 0 0 1 355.2 456.7" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" marker-end="url(#loop-arrow)"/>
+          <path d="M 204.8 456.7 A 220 220 0 0 1 73.3 325.2" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" marker-end="url(#loop-arrow)"/>
+          <path d="M 73.3 174.8 A 220 220 0 0 1 204.8 43.3" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" marker-end="url(#loop-arrow)"/>
+        </svg>
+        <div class="loop-node" style="left:280px; top:30px;">Usada por um tempo</div>
+        <div class="loop-node" style="left:500px; top:250px;">Dono(a) não quer mais</div>
+        <div class="loop-node hero" style="left:280px; top:470px;">Vende no Kloop</div>
+        <div class="loop-node" style="left:60px; top:250px;">Novo dono usa</div>
+        <div class="loop-center"><img src="assets/img/kloop-icon.png" alt="Kloop"></div>
       </div>
     </div>
     <div class="corner-note">O nome vem de fechar o loop: a peça volta a circular em vez de virar resíduo.</div>
     <div class="footer-zone">
-      <span class="footer-count">3 / 8</span>
+      <span class="footer-count">3 / 10</span>
+      <svg class="loop-mark state-closing" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
+    </div>
+  </section>
+  <!-- Passagem: "E isso não é conceito. Deixa a gente mostrar o produto rodando de verdade — começando por anunciar e negociar." -->
+
+  <!-- ============ SLIDE 4 — PRODUTO, PARTE 1: ANUNCIAR E NEGOCIAR ============ -->
+  <section class="slide theme-light" id="s4">
+    <div class="deco-ring" style="top:-500px; left:-460px;"></div>
+    <img class="slide-logo" src="assets/img/logo-teal.png" alt="Kloop">
+    <div class="title-zone">Anunciar e negociar, na prática.</div>
+    <div class="product-videos">
+      <div class="product-col">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <video id="video-anunciar" muted playsinline loop poster="">
+            <source src="assets/video/demo-anunciar.mp4" type="video/mp4">
+          </video>
+          <div class="placeholder" id="ph-anunciar">
+            <div class="ph-title">Vídeo: anunciando uma peça</div>
+            <div class="ph-sub">Coloque a gravação em<br><code>assets/video/demo-anunciar.mp4</code></div>
+          </div>
+        </div>
+        <div class="anchor-tag">Foto, dados da peça, publicar</div>
+      </div>
+      <div class="product-col">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <video id="video-negociar" muted playsinline loop poster="">
+            <source src="assets/video/demo-negociar.mp4" type="video/mp4">
+          </video>
+          <div class="placeholder" id="ph-negociar">
+            <div class="ph-title">Vídeo: negociando</div>
+            <div class="ph-sub">Coloque a gravação em<br><code>assets/video/demo-negociar.mp4</code></div>
+          </div>
+        </div>
+        <div class="anchor-tag">Oferta, contraproposta, prazo de 24h</div>
+      </div>
+    </div>
+    <div class="footer-zone">
+      <span class="footer-count">4 / 10</span>
+      <svg class="loop-mark state-closing" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
+    </div>
+  </section>
+  <!-- Passagem: "Com a venda combinada, é hora de olhar pro dinheiro — e pra novidade que a gente mais quer mostrar hoje." -->
+
+  <!-- ============ SLIDE 5 — PRODUTO, PARTE 2: KLOOP BANK/PRO E IA ============ -->
+  <section class="slide theme-dark" id="s5">
+    <div class="deco-ring" style="bottom:-500px; right:-460px;"></div>
+    <img class="slide-logo" src="assets/img/logo-extensa.png" alt="Kloop">
+    <div class="title-zone">Kloop Bank, Kloop Pro e a IA de anúncio.</div>
+    <div class="product-videos">
+      <div class="product-col">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <video id="video-kloopbank" muted playsinline loop poster="">
+            <source src="assets/video/demo-kloopbank.mp4" type="video/mp4">
+          </video>
+          <div class="placeholder" id="ph-kloopbank">
+            <div class="ph-title">Vídeo: Kloop Bank e Kloop Pro</div>
+            <div class="ph-sub">Coloque a gravação em<br><code>assets/video/demo-kloopbank.mp4</code></div>
+          </div>
+        </div>
+        <div class="anchor-tag">Carteira, saldo, cashback, o que o Pro desbloqueia</div>
+      </div>
+      <div class="product-col">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <video id="video-ia" muted playsinline loop poster="">
+            <source src="assets/video/demo-ia.mp4" type="video/mp4">
+          </video>
+          <div class="placeholder" id="ph-ia">
+            <div class="ph-title">Vídeo: IA gerando o anúncio</div>
+            <div class="ph-sub">Coloque a gravação em<br><code>assets/video/demo-ia.mp4</code></div>
+          </div>
+        </div>
+        <div class="anchor-tag">Foto + descrição curta → anúncio pronto</div>
+      </div>
+    </div>
+    <div class="footer-zone">
+      <span class="footer-count">5 / 10</span>
       <svg class="loop-mark state-closing" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
     </div>
   </section>
   <!-- Passagem: "O que vocês acabaram de ver tem uma regra por trás: dentro do C2C, todo usuário é ao mesmo tempo um possível vendedor e um possível comprador. E essa regra é o nosso primeiro diferencial." -->
 
-  <!-- ============ SLIDE 4 — DIFERENCIAL: CONFIANÇA ============ -->
-  <section class="slide theme-dark" id="s4">
+  <!-- ============ SLIDE 6 — DIFERENCIAL: CONFIANÇA ============ -->
+  <section class="slide theme-dark" id="s6">
     <div class="deco-ring" style="top:-480px; right:-420px;"></div>
     <img class="slide-logo" src="assets/img/logo-extensa.png" alt="Kloop">
     <div class="title-zone">A negociação inteira acontece dentro do app.</div>
@@ -446,26 +508,23 @@ html, body {
         <div class="card-icon">
           <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <rect x="10" y="6" width="28" height="38" rx="2"/>
-            <line x1="17" y1="14" x2="21" y2="14"/>
-            <line x1="27" y1="14" x2="31" y2="14"/>
-            <line x1="17" y1="22" x2="21" y2="22"/>
-            <line x1="27" y1="22" x2="31" y2="22"/>
-            <line x1="17" y1="30" x2="21" y2="30"/>
-            <line x1="27" y1="30" x2="31" y2="30"/>
+            <line x1="17" y1="14" x2="21" y2="14"/><line x1="27" y1="14" x2="31" y2="14"/>
+            <line x1="17" y1="22" x2="21" y2="22"/><line x1="27" y1="22" x2="31" y2="22"/>
+            <line x1="17" y1="30" x2="21" y2="30"/><line x1="27" y1="30" x2="31" y2="30"/>
             <rect x="20" y="36" width="8" height="8"/>
           </svg>
         </div>
       </div>
     </div>
     <div class="footer-zone">
-      <span class="footer-count">4 / 8</span>
+      <span class="footer-count">6 / 10</span>
       <svg class="loop-mark state-closing" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
     </div>
   </section>
   <!-- Passagem: "E é dentro do condomínio que a nossa aposta principal acontece: o nosso maior diferencial." -->
 
-  <!-- ============ SLIDE 5 — DIFERENCIAL: KLOOP COMUNIDADES ============ -->
-  <section class="slide theme-light" id="s5">
+  <!-- ============ SLIDE 7 — DIFERENCIAL: KLOOP COMUNIDADES ============ -->
+  <section class="slide theme-light" id="s7">
     <div class="deco-ring" style="bottom:-500px; left:-460px;"></div>
     <img class="slide-logo" src="assets/img/logo-teal.png" alt="Kloop">
     <div class="title-zone">Uma conversa com o síndico abre um prédio inteiro.</div>
@@ -505,14 +564,14 @@ html, body {
     </div>
     <div class="honesty-note">Modelo de planos e monetização decididos, ainda não implementados em código. O totem já existe e funciona.</div>
     <div class="footer-zone">
-      <span class="footer-count">5 / 8</span>
+      <span class="footer-count">7 / 10</span>
       <svg class="loop-mark state-closing" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
     </div>
   </section>
   <!-- Passagem: "Esse é o motor que permite a gente cobrar diferente do resto do mercado. É assim que o mercado cobra hoje." -->
 
-  <!-- ============ SLIDE 6 — CUSTO: ENJOEI, OLX, KLOOP ============ -->
-  <section class="slide theme-dark" id="s6">
+  <!-- ============ SLIDE 8 — CUSTO: ENJOEI, REPASSA, KLOOP ============ -->
+  <section class="slide theme-dark" id="s8">
     <div class="deco-ring" style="top:-480px; left:-420px;"></div>
     <img class="slide-logo" src="assets/img/logo-extensa.png" alt="Kloop">
     <div class="title-zone" style="font-size:40px;">Como o mercado cobra hoje, numa peça de R$100.</div>
@@ -535,7 +594,7 @@ html, body {
       </div>
       <div class="fee-card">
         <div class="fee-logo-row"><img class="fee-logo" src="assets/img/kloop-icon.png" alt="Kloop" style="height:40px;"></div>
-        <div class="fee-name">Kloop (plano gratuito)</div>
+        <div class="fee-name">Kloop (plano grátis)</div>
         <div class="fee-model">14% de comissão + R$7,50 de tarifa fixa</div>
         <div class="fee-discount">− R$21,50 em taxas</div>
         <div class="fee-net">R$78,50</div>
@@ -545,14 +604,14 @@ html, body {
     <span class="citation-line fee-citation">Valores calculados sobre uma peça de R$100. Fontes: enjoei.com.br/ajuda, levantamento próprio no site da Repassa e print do app Kloop (ago/2026).</span>
     <div class="closing-line">Kloop e Enjoei disputam a mesma experiência curada de moda. A Kloop posiciona sua taxa abaixo da pressão de custos do Enjoei, sem abrir mão da sustentabilidade, e ainda soma o volume das Comunidades.</div>
     <div class="footer-zone">
-      <span class="footer-count">6 / 8</span>
+      <span class="footer-count">8 / 10</span>
       <svg class="loop-mark state-closing" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
     </div>
   </section>
   <!-- Passagem: "E isso tudo precisa fechar como negócio." -->
 
-  <!-- ============ SLIDE 7 — VIABILIDADE E ONDE ESTAMOS ============ -->
-  <section class="slide theme-light" id="s7">
+  <!-- ============ SLIDE 9 — VIABILIDADE E ONDE ESTAMOS ============ -->
+  <section class="slide theme-light" id="s9">
     <div class="deco-ring" style="bottom:-500px; right:-460px;"></div>
     <img class="slide-logo" src="assets/img/logo-teal.png" alt="Kloop">
     <div class="title-zone" style="font-size:40px;">A conta fecha, e aqui está o estado real do produto.</div>
@@ -588,21 +647,21 @@ html, body {
       </div>
     </div>
     <div class="footer-zone">
-      <span class="footer-count">7 / 8</span>
+      <span class="footer-count">9 / 10</span>
       <svg class="loop-mark state-closing" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
     </div>
   </section>
   <!-- Passagem: "O comportamento já existe. A gente deu estrutura, segurança e um custo que cabe na peça de cinquenta reais. Pra fechar." -->
 
-  <!-- ============ SLIDE 8 — OBRIGADO ============ -->
-  <section class="slide theme-deep" id="s8">
+  <!-- ============ SLIDE 10 — OBRIGADO ============ -->
+  <section class="slide theme-deep" id="s10">
     <div class="deco-ring" style="top:-480px; right:-420px;"></div>
-    <div class="center-wrap">
+    <div style="position:absolute; inset:0; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:30px;">
       <div class="thanks-line">Obrigado!</div>
       <div class="thanks-credits">Kloop · Otavio Vitoriano, Gabriel Torres, Eduardo Fedeli, Caique Chagas, Rodrigo Resende</div>
     </div>
     <div class="footer-zone">
-      <span class="footer-count">8 / 8</span>
+      <span class="footer-count">10 / 10</span>
       <svg class="loop-mark state-closed" width="44" height="44" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/></svg>
     </div>
   </section>
@@ -635,15 +694,14 @@ html, body {
     current = n;
     slides[current].classList.add('active');
     syncLetterbox();
-    var v = document.getElementById('demo-video');
-    if (v) {
+    document.querySelectorAll('video').forEach(function (v) {
       if (slides[current].contains(v)) {
         v.currentTime = 0;
         v.play().catch(function () {});
       } else {
         v.pause();
       }
-    }
+    });
   }
   syncLetterbox();
 
@@ -661,14 +719,17 @@ html, body {
     if (x < rect.width / 2) show(current - 1); else show(current + 1);
   });
 
-  // Video fallback: if the team hasn't dropped the demo file yet, show the placeholder.
-  var video = document.getElementById('demo-video');
-  var placeholder = document.getElementById('demo-placeholder');
-  video.addEventListener('error', function () { placeholder.classList.add('show'); }, true);
-  video.querySelector('source').addEventListener('error', function () { placeholder.classList.add('show'); });
-  setTimeout(function () {
-    if (video.readyState === 0) placeholder.classList.add('show');
-  }, 800);
+  // Video fallback: if a video file hasn't been recorded/dropped in yet, show its placeholder.
+  document.querySelectorAll('.phone-frame video').forEach(function (video) {
+    var placeholder = video.parentElement.querySelector('.placeholder');
+    if (!placeholder) return;
+    video.addEventListener('error', function () { placeholder.classList.add('show'); }, true);
+    var source = video.querySelector('source');
+    if (source) source.addEventListener('error', function () { placeholder.classList.add('show'); });
+    setTimeout(function () {
+      if (video.readyState === 0) placeholder.classList.add('show');
+    }, 800);
+  });
 })();
 </script>
 

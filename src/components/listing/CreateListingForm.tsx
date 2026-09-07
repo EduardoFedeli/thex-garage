@@ -6,10 +6,12 @@ import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils"
 import { createListingSchema, type CreateListingInput } from "@/lib/validators/listing"
-import { ImageUploader } from "@/components/create/ImageUploader"
+import { ImageUploader, type UploadedImage } from "@/components/create/ImageUploader"
 import { CategoryPicker } from "@/components/create/CategoryPicker"
+import { AiListingIntake } from "@/components/listing/AiListingIntake"
+import type { AiListingDraft } from "@/app/api/listings/ai-draft/route"
 import Link from "next/link"
-import { Check, Camera, Package } from "lucide-react"
+import { Check, Camera, Package, Sparkles } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -320,7 +322,7 @@ function ValorAReceberModal({ priceCents, onClose }: { priceCents: number; onClo
 
 export function CreateListingForm({ activeCount, maxListings, planName, categories, brands, userCommunities = [] }: CreateListingFormProps) {
   const router = useRouter()
-  const [step, setStep] = useState<1 | 2>(1)
+  const [step, setStep] = useState<1 | "ai" | 2>(1)
   const [toast, setToast] = useState("")
   const [serverError, setServerError] = useState("")
   const [showValorModal, setShowValorModal] = useState(false)
@@ -335,6 +337,8 @@ export function CreateListingForm({ activeCount, maxListings, planName, categori
   const [size, setSize] = useState("")
   const [sizeCtx, setSizeCtx] = useState<SizeContext>({ show: false })
   const [selectedCommunityIds, setSelectedCommunityIds] = useState<string[]>([])
+  const [aiImages, setAiImages] = useState<UploadedImage[]>([])
+  const [aiPriceSuggestion, setAiPriceSuggestion] = useState<{ minCents: number; maxCents: number } | null>(null)
 
   const hasReachedLimit = maxListings !== -1 && activeCount >= maxListings
 
@@ -396,6 +400,43 @@ export function CreateListingForm({ activeCount, maxListings, planName, categori
     [setValue],
   )
 
+  function resolveSizeContextForCategory(categoryId: string): SizeContext {
+    const byId = new Map(categories.map((c) => [c.id, c]))
+    const chain: Category[] = []
+    let current = byId.get(categoryId)
+    while (current) {
+      chain.unshift(current)
+      current = current.parentId ? byId.get(current.parentId) : undefined
+    }
+    return getSizeContext(chain[0]?.name ?? "", chain[1]?.name ?? "")
+  }
+
+  function handleAiComplete(draft: AiListingDraft, images: UploadedImage[]) {
+    setAiImages(images)
+    setValue("images", images, { shouldValidate: true })
+    if (draft.title) setValue("title", draft.title, { shouldValidate: true })
+    if (draft.description) setValue("description", draft.description, { shouldValidate: true })
+    if (draft.brandId) setValue("brandId", draft.brandId, { shouldValidate: true })
+    if (draft.condition) setValue("condition", draft.condition, { shouldValidate: true })
+    if (draft.categoryId) {
+      setValue("categoryId", draft.categoryId, { shouldValidate: true })
+      const ctx = resolveSizeContextForCategory(draft.categoryId)
+      setSizeCtx(ctx)
+      if (draft.sizeGuess && ctx.show) {
+        const match = ctx.options.find((o) => o.toLowerCase() === draft.sizeGuess?.toLowerCase())
+        if (match) {
+          setSize(match)
+          setValue("size", match)
+        }
+      }
+    }
+    setAiPriceSuggestion(draft.priceSuggestion ?? null)
+    if (!draft.ok) {
+      showToast(draft.error ?? "Não foi possível gerar sugestões. Preencha os campos manualmente.")
+    }
+    setStep(2)
+  }
+
   const onSubmit = async (data: CreateListingInput) => {
     setServerError("")
     try {
@@ -456,6 +497,28 @@ export function CreateListingForm({ activeCount, maxListings, planName, categori
           </div>
         </button>
 
+        <button
+          type="button"
+          onClick={() => {
+            if (hasReachedLimit) {
+              showToast(`Você atingiu o limite de ${maxListings} anúncios do plano ${planName}.`)
+              return
+            }
+            setStep("ai")
+          }}
+          className="w-full bg-white dark:bg-[var(--color-pine)] border-2 border-transparent hover:border-[var(--color-teal)] dark:hover:border-[var(--color-celadon)] rounded-3xl p-6 text-left transition-all shadow-sm group"
+        >
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-[var(--color-teal)]/10 dark:bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--color-teal)]/20 transition-colors">
+              <Sparkles className="w-7 h-7 text-[var(--color-teal)] dark:text-[var(--color-celadon)]" strokeWidth={2} />
+            </div>
+            <div>
+              <p className="font-black text-[var(--foreground)] text-[18px]">criar com IA</p>
+              <p className="text-[14px] text-gray-500 dark:text-sage mt-1">Suba as fotos e a IA sugere título, descrição e mais</p>
+            </div>
+          </div>
+        </button>
+
         <Link
           href="/pro"
           className="w-full bg-white dark:bg-[var(--color-pine)] border-2 border-transparent hover:border-[var(--color-teal)] dark:hover:border-[var(--color-celadon)] rounded-3xl p-6 text-left transition-all shadow-sm group block"
@@ -471,6 +534,16 @@ export function CreateListingForm({ activeCount, maxListings, planName, categori
           </div>
         </Link>
       </div>
+    )
+  }
+
+  // ── Step "ai": AI-assisted intake ─────────────────────────────────────────
+  if (step === "ai") {
+    return (
+      <>
+        <Toast message={toast} />
+        <AiListingIntake onBack={() => setStep(1)} onComplete={handleAiComplete} />
+      </>
     )
   }
 
@@ -504,7 +577,11 @@ export function CreateListingForm({ activeCount, maxListings, planName, categori
             name="images"
             control={control}
             render={({ field, fieldState }) => (
-              <ImageUploader onChange={field.onChange} error={fieldState.error?.message} />
+              <ImageUploader
+                onChange={field.onChange}
+                error={fieldState.error?.message}
+                initialImages={aiImages.length > 0 ? aiImages : undefined}
+              />
             )}
           />
         </SectionCard>
@@ -689,6 +766,23 @@ export function CreateListingForm({ activeCount, maxListings, planName, categori
           </div>
           {errors.priceCents && (
             <p className="text-[12px] text-red-500 pl-1 font-medium">{errors.priceCents.message}</p>
+          )}
+          {aiPriceSuggestion && (
+            <div className="flex items-center justify-between gap-3 bg-[var(--color-teal)]/8 dark:bg-[var(--color-teal)]/10 border border-[var(--color-teal)]/20 rounded-xl px-4 py-3 mt-1">
+              <p className="text-[12px] text-[var(--foreground)] leading-relaxed">
+                <span className="font-bold">sugestão da IA:</span>{' '}
+                R$ {fmtBRL(aiPriceSuggestion.minCents / 100)} – R$ {fmtBRL(aiPriceSuggestion.maxCents / 100)}
+                <br />
+                <span className="text-gray-500 dark:text-sage">não é garantia de venda, ajuste como preferir.</span>
+              </p>
+              <button
+                type="button"
+                onClick={() => handlePriceInput(String(Math.round((aiPriceSuggestion.minCents + aiPriceSuggestion.maxCents) / 2)))}
+                className="flex-shrink-0 text-[12px] font-bold text-[var(--color-teal)] dark:text-[var(--color-celadon)] hover:underline underline-offset-2 whitespace-nowrap"
+              >
+                usar valor médio
+              </button>
+            </div>
           )}
           {watchedPriceCents > 0 && !errors.priceCents && (
             <p className="text-[12px] text-[var(--color-teal)] dark:text-[var(--color-celadon)] font-medium mt-1 pl-1">

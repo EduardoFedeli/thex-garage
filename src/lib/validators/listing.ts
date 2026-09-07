@@ -32,6 +32,16 @@ export const createListingSchema = z.object({
 
 export type CreateListingInput = z.infer<typeof createListingSchema>
 
+export const aiListingDraftRequestSchema = z.object({
+  images: z
+    .array(z.object({ url: z.string().url(), publicId: z.string() }))
+    .min(1, "Adicione pelo menos 1 foto")
+    .max(6, "Máximo de 6 fotos"),
+  note: z.string().max(200, "Descrição deve ter no máximo 200 caracteres").optional(),
+})
+
+export type AiListingDraftRequest = z.infer<typeof aiListingDraftRequestSchema>
+
 // Mantido para updateListingAction existente
 export const listingSchema = z.object({
   title: z.string().min(3, "Título deve ter pelo menos 3 caracteres").max(100, "Título muito longo"),

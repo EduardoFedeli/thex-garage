@@ -38,7 +38,7 @@ export function HeaderAuth({ user }: HeaderAuthProps) {
             onClick={() => setIsModalOpen(true)}
             className="rounded-full bg-teal px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-airforce"
           >
-            Quero vender
+            Vender
           </button>
         </div>
         <AuthModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
@@ -55,7 +55,7 @@ export function HeaderAuth({ user }: HeaderAuthProps) {
         href="/create"
         className="hidden sm:block rounded-full bg-teal px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-airforce"
       >
-        Quero vender
+        Vender
       </Link>
 
       <button

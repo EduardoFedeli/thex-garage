@@ -2,7 +2,6 @@ import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   Store, MessageCircle, ArchiveX, ShoppingBag, ChevronRight,
   PackageOpen, HelpCircle, Info, Coins, Handshake, Star, TrendingUp, Trophy,
@@ -11,6 +10,7 @@ import {
 import { PlanBadge } from '@/components/ui/PlanBadge'
 import { formatPrice } from '@/lib/utils'
 import { CoverUploader } from '@/components/perfil/CoverUploader'
+import { AvatarUploader } from '@/components/perfil/AvatarUploader'
 import { getCashbackBalance } from '@/lib/cashback'
 import { getUserAchievementsData } from '@/lib/actions/achievements'
 
@@ -126,13 +126,7 @@ export default async function VendasPage() {
           <div className="px-4 pb-5 -mt-12 relative z-10 flex justify-between items-end">
             <div className="flex flex-col">
               {/* Avatar */}
-              <div className="w-[84px] h-[84px] rounded-full border-[3px] border-white dark:border-[var(--color-pine)] bg-[var(--color-frosted)] dark:bg-[var(--color-forest)] flex items-center justify-center overflow-hidden shadow-lg ring-4 ring-white/40 dark:ring-black/20 flex-shrink-0">
-                {avatarSrc ? (
-                  <Image src={avatarSrc} alt={displayName} width={84} height={84} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-[20px] font-black text-[var(--color-teal)] dark:text-[var(--color-celadon)]">{userInitials}</span>
-                )}
-              </div>
+              <AvatarUploader currentAvatarUrl={avatarSrc} initials={userInitials} size={84} />
 
               <div className="mt-2.5">
                 <div className="flex items-center gap-2">

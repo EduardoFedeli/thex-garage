@@ -108,6 +108,8 @@ export function MegaNav({ brands, user, communitiesCount = 0, unreadCount = 0 }:
 
   const iconCls = "p-2 rounded-full transition-colors text-gray-500 hover:text-[var(--color-teal)] hover:bg-gray-100 dark:text-sage dark:hover:text-[var(--color-celadon)] dark:hover:bg-[var(--color-emerald)]"
 
+  if (isComunidades) return null
+
   return (
     <>
       <header className={cn(
