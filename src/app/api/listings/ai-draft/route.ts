@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { aiListingDraftRequestSchema } from "@/lib/validators/listing"
 
+export const maxDuration = 60
+
 interface CategoryRow {
   id: string
   name: string
